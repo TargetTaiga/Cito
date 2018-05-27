@@ -1,0 +1,1 @@
+export default () => <div style={{color: 'red'}}>First Component</div>;

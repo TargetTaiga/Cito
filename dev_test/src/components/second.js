@@ -1,0 +1,1 @@
+export default () => <div style={{color: 'green'}}>Second Component</div>;
