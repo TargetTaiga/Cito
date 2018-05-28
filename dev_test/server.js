@@ -13,15 +13,15 @@ ssr.build(pages).then((builder) => {
 	app.use('/static', express.static('./build/.static')); // TODO
 
 	app.get('/1', (req, res) => {
-		res.send(builder.get(pages[0]));
+		res.send(builder.get(pages[0], {title: 'Title 1'}));
 	});
 
 	app.get('/2', (req, res) => {
-		res.send(builder.get(pages[1]));
+		res.send(builder.get(pages[1], {title: 'Title 2'}));
 	});
 
 	app.get('/3', (req, res) => {
-		res.send(builder.get(pages[2]));
+		res.send(builder.get(pages[2], {title: 'Title 3'}));
 	});
 
 	app.listen(4200, () => console.log('Listening!'));

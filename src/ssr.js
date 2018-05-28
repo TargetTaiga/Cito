@@ -21,11 +21,12 @@ const build = (pages) => new Promise((resolve, reject) => {
 		fs_instance = require('fs');
 	}
 
-	const get = (pagePath) => {
+	const get = (pagePath, htmlOptions) => {
 		const inline = fs_instance.readFileSync(path.resolve(cwd, 'build', pagePath)).toString();
 
 		return html({
 			inline,
+			title: htmlOptions.title,
 			vendor: '/static/vendor.js',
 			react: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react.js')).toString(),
 			reactDOM: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react-dom.js')).toString()
