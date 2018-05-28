@@ -1,14 +1,21 @@
 const webpack = require('webpack');
 const memory_fs = require('memory-fs');
+const crypto = require('crypto');
 const path = require('path');
 const html = require('./html');
+const {strMapToObj} = require('./utils');
 
 const build = (pages) => new Promise((resolve, reject) => {
 	const cwd = process.cwd();
 	const webpack_config = require('./config');
-	let fs_instance;
 
-	pages.forEach((pagePath) => webpack_config.entry[removeExtension(pagePath)] = pagePath);
+	const pathesMap = new Map();
+
+	pages.forEach((pagePath) => {
+		const pagePathHash = crypto.createHash('sha256').update(pagePath).digest('hex');
+		webpack_config.entry[pagePathHash] = pagePath;
+		pathesMap.set(pagePath, pagePathHash + '.js');
+	});
 
 	const compiler = webpack(webpack_config);
 
@@ -22,28 +29,28 @@ const build = (pages) => new Promise((resolve, reject) => {
 	}
 
 	const get = (pagePath, htmlOptions) => {
-		const inline = fs_instance.readFileSync(path.resolve(cwd, 'build', pagePath)).toString();
+		const inline = fs_instance.readFileSync(path.resolve(cwd, 'build', pathesMap.get(pagePath))).toString();
+
+		console.log(fs_instance.readdirSync(path.resolve(cwd, 'build')));
 
 		return html({
 			inline,
 			title: htmlOptions.title,
 			vendor: '/static/vendor.js',
 			react: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react.js')).toString(),
-			reactDOM: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react-dom.js')).toString()
+			reactDOM: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react-dom.js')).toString(),
+			data: htmlOptions.data
 		});
 	};
 	const middleware = () => null;
 
-	const watching = compiler.watch({
-		aggregateTimeout: 1000,
-		poll: 1000
-	}, (err) => {
+	const watching = compiler.run((err) => {
 		console.log(`Compiled! Errors: ${err}`);
 
 		resolve({
 			get: get,
 			static: middleware
-		})
+		});
 	});
 });
 

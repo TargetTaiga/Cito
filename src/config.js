@@ -1,21 +1,19 @@
 const path = require('path');
-
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const cwd = process.cwd();
-
 const buildFolder = path.resolve(cwd, 'build');
 
-module.exports = {
-	mode: "development",
+module.exports = () => ({
+	mode: "development", // TODO toggler
 	entry: {
-		'react': require.resolve('react', {paths: [cwd]}),
-		'react-dom': require.resolve('react-dom', {paths: [cwd]})
+		'react': require.resolve('react', {paths: [cwd]}), // TODO key in const
+		'react-dom': require.resolve('react-dom', {paths: [cwd]}) // TODO key in const
 	},
 	output: {
 		path: buildFolder,
 		filename: "[name].js",
-		library: ["__PAGE_CONTENT__"],
+		library: ["__PAGE_CONTENT__"], // TODO  settings
 		libraryExport: "default"
 	},
 	module: {
@@ -53,16 +51,16 @@ module.exports = {
 	optimization: {
 		splitChunks: {
 			chunks: 'initial',
-			minChunks: 1,
+			minChunks: 2,
 			cacheGroups: {
 				vendor: {
 					test: /node_modules/,
 					chunks: 'all',
-					name: '/.static/vendor',
+					name: 'vendor', // TODO name in settings
 					priority: 10,
 					enforce: true
 				}
 			}
 		},
 	}
-};
+});

@@ -4,6 +4,7 @@ import Second from '../components/second';
 
 export default class Page extends React.Component {
 	render() {
+		console.log(this.props);
 		return (
 			<div>
 				Some data: {JSON.stringify(this.props)};
