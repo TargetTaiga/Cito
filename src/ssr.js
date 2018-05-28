@@ -16,7 +16,7 @@ const build = (pages) => new Promise((resolve, reject) => {
 
 	if (memory_use) {
 		fs_instance = new memory_fs();
-		compiler.outputFileSystem = memory_fs_instance;
+		compiler.outputFileSystem = fs_instance;
 	} else {
 		fs_instance = require('fs');
 	}
@@ -24,7 +24,12 @@ const build = (pages) => new Promise((resolve, reject) => {
 	const get = (pagePath) => {
 		const inline = fs_instance.readFileSync(path.resolve(cwd, 'build', pagePath)).toString();
 
-		return html({inline, vendor: '/static/vendor.js'});
+		return html({
+			inline,
+			vendor: '/static/vendor.js',
+			react: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react.js')).toString(),
+			reactDOM: fs_instance.readFileSync(path.resolve(cwd, 'build', 'react-dom.js')).toString()
+		});
 	};
 	const middleware = () => null;
 

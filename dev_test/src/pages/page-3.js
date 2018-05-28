@@ -1,4 +1,3 @@
-import React from 'react';
 import First from '../components/first';
 
 export default () => (

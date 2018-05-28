@@ -8,11 +8,14 @@ const buildFolder = path.resolve(cwd, 'build');
 
 module.exports = {
 	mode: "development",
-	entry: {},
+	entry: {
+		'react': require.resolve('react', {paths: [cwd]}),
+		'react-dom': require.resolve('react-dom', {paths: [cwd]})
+	},
 	output: {
 		path: buildFolder,
 		filename: "[name].js",
-		library: "__PAGE_COMPONENT__",
+		library: ["__PAGE_CONTENT__"],
 		libraryExport: "default"
 	},
 	module: {
